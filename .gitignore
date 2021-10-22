@@ -1,3 +1,4 @@
 *.pyc
 vb/
 *test.py
+*DS_Store
