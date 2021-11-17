@@ -21,46 +21,48 @@ class Point:
         return Point(self.x / scalar, self.y / scalar)
 
     def __str__(self):
-        return f"Point({self.x}, {self.y})"
+        return f"Point({self.x:.2f}, {self.y:.2f})"
 
 
-def contraction(w: Point, m: Point):
-    return (w + m) / 2
+def contraction(W: Point, M: Point) -> Point:
+    return (W + M) / 2
 
 
-def expansion(r: Point, m: Point):
-    return (r * 2) - m
+def expansion(R: Point, M: Point) -> Point:
+    return (R * 2) - M
 
 
-def shrink(b: Point, w: Point):
-    return (b + w) / 2
+def shrink(B: Point, W: Point) -> Point:
+    return (B + W) / 2
 
 
-def reflection(m: Point, w: Point):
-    return (m * 2) - w
+def reflection(M: Point, W: Point) -> Point:
+    return (M * 2) - W
 
 
-def midpoint(b: Point, g: Point):
-    return (b + g) / 2
+def midpoint(B: Point, G: Point) -> Point:
+    return (B + G) / 2
 
 
-def distance(p1: Point, p2: Point):
+def distance(p1: Point, p2: Point) -> Point:
     return sqrt(((p2.x - p1.x)**2) + ((p2.y - p1.y)**2))
 
 
 def nelder_mead(f):
-    v1 = Point(0, 0)
-    v2 = Point(1.2, 0)
-    v3 = Point(0, 0.8)
+    vertice1 = Point(0, 0)
+    vertice2 = Point(1.2, 0)
+    vertice3 = Point(0, 0.8)
 
-    values: List[Point] = [v1, v2, v3]
+    values: List[Point] = [vertice1, vertice2, vertice3]
     values.sort(key=lambda point: f(point))
+    for value in values:
+        print(value)
 
     B: Point = values[0]  # best
     G: Point = values[1]  # good
     W: Point = values[2]  # worst
 
-    while distance(B, W) > 0.001:
+    while distance(B, W) > 0.0001:
         M: Point = midpoint(B, G)
         R: Point = reflection(M, W)
 
@@ -95,9 +97,13 @@ def sphere(p: Point) -> float:
     return (p.x * p.x) + (p.y * p.y)
 
 
-def ronsenbrock(p: Point):
+def ronsenbrock(p: Point) -> float:
     return (1 - p.x) + 100*((p.y-(p.x*p.x))*(p.y-(p.x*p.x)))
 
 
-result = nelder_mead(ronsenbrock)
+def example(p: Point) -> float:
+    return p.x**2 - 4*p.x + p.y**2 - p.y - p.x*p.y
+
+
+result = nelder_mead(example)
 print(result)
