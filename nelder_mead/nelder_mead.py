@@ -33,9 +33,7 @@ def nelder_mead(f, alpha=1, rho=1, gamma=1, sigma=1) -> Point:
     vertice2 = Point(1.2, 0)
     vertice3 = Point(0, 0.8)
 
-    values: List[Point] = [vertice1, vertice2,
-                           vertice3]
-    # values: np.array[Point] = np.array([vertice1, vertice2, vertice3])
+    values: List[Point] = [vertice1, vertice2, vertice3]
     values.sort(key=lambda point: f(point))
 
     B: Point = values[0]  # best
