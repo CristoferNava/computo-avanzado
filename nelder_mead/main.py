@@ -1,3 +1,6 @@
+# TODO Add Numpy
+# TODO Add coefficcients
+
 from point import Point
 from nelder_mead import nelder_mead
 
