@@ -33,12 +33,12 @@ def nelder_mead(f, alpha=1, rho=1, gamma=1, sigma=1) -> Point:
     vertice2 = Point(1.2, 0)
     vertice3 = Point(0, 0.8)
 
-    values: List[Point] = [vertice1, vertice2, vertice3]
-    values.sort(key=lambda point: f(point))
+    values = np.array([vertice1.np(), vertice2.np(), vertice3.np()])
+    values = values[values[:, 0].argsort()]
 
-    B: Point = values[0]  # best
-    G: Point = values[1]  # good
-    W: Point = values[2]  # worst
+    B: Point = Point.np_to_point(values[0])  # best
+    G: Point = Point.np_to_point(values[1])  # good
+    W: Point = Point.np_to_point(values[2])  # worst
 
     while distance(B, W) > 0.001:
         M: Point = midpoint(B, G)
@@ -68,4 +68,5 @@ def nelder_mead(f, alpha=1, rho=1, gamma=1, sigma=1) -> Point:
         values: List[Point] = [B, G, W]
         values.sort(key=lambda point: f(point))
         B, G, W = values
+
     return B

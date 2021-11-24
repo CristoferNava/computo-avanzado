@@ -1,5 +1,3 @@
-# TODO Add Numpy
-
 from point import Point
 from nelder_mead import nelder_mead
 
@@ -18,7 +16,8 @@ def example(p: Point) -> float:
 
 sphere_result = nelder_mead(sphere)
 rosenbrock_result = nelder_mead(rosenbrock)
-example_result = nelder_mead(example)
+example_result = nelder_mead(
+    f=example, alpha=1.0, rho=1.0, gamma=1.0, sigma=1.0)
 
 print(f"Sphere: {sphere_result}")
 print(f"Rosenbrock: {rosenbrock_result}")

@@ -1,4 +1,5 @@
 from __future__ import annotations
+import numpy as np
 
 
 class Point:
@@ -22,3 +23,10 @@ class Point:
 
     def __str__(self):
         return f"Point({self.x:.2f}, {self.y:.2f})"
+
+    def np(self) -> np.array:
+        return np.array([self.x, self.y])
+
+    @staticmethod
+    def np_to_point(array: np.array) -> Point:
+        return Point(array[0], array[1])
