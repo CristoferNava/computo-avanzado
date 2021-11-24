@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from math import sqrt
 
-image = cv2.imread("/Users/cristofer/Downloads/woman.jpeg", 0)
+image = cv2.imread("/Users/cristofer/Downloads/valve.PNG", 0)
 
 
 def conv_transform(image):
@@ -45,7 +45,7 @@ def norm(img1, img2):
     for i in range(img1.shape[0]):
         for j in range(img1.shape[1]):
             q = sqrt((img1[i][j]**2 + img2[i][j]**2))
-            if q > 90:
+            if q > 60:
                 img_copy[i][j] = 255
             else:
                 img_copy[i][j] = 0
@@ -62,9 +62,9 @@ cv2.imshow("gradient_y", gy)
 
 
 kernel = np.array([
-    [-1, 0, 1],
-    [-2, 0, 2],
-    [-1, 0, 1]], dtype="float64")
+    [1, 0, -1],
+    [2, 0, -2],
+    [1, 0, -1]], dtype="float64")
 gx = conv(image, kernel)
 cv2.imshow("gradient_x", gx)
 
