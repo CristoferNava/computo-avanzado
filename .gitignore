@@ -2,3 +2,4 @@
 vb/
 *test.py
 *DS_Store
+*__pycache__/
