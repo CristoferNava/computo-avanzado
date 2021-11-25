@@ -1,75 +1,37 @@
-import cv2
+import matplotlib.pyplot as plt
 import numpy as np
-from math import sqrt
-
-image = cv2.imread("/Users/cristofer/Downloads/valve.PNG", 0)
-
-
-def conv_transform(image):
-    image_copy = image.copy()
-
-    for i in range(image.shape[0]):
-        for j in range(image.shape[1]):
-            image_copy[i][j] = image[image.shape[0]-i-1][image.shape[1]-j-1]
-    return image_copy
+import multiprocessing as mp
+from sobel import to_grayscale, sobel_op
 
 
-def conv(image, kernel):
-    kernel = conv_transform(kernel)
-    image_h = image.shape[0]
-    image_w = image.shape[1]
+image = "/Users/cristofer/Downloads/woman.jpeg"
+dst_path = "/Users/cristofer/Downloads/sobel.png"
 
-    kernel_h = kernel.shape[0]
-    kernel_w = kernel.shape[1]
+if __name__ == "__main__":
+    # Kernels and image declaration
+    kernel_x = np.array([
+        [1.0, 0.0, -1.0],
+        [2.0, 0.0, -2.0],
+        [1.0, 0.0, -1.0]])
 
-    h = kernel_h // 2
-    w = kernel_w // 2
+    kernel_y = np.array([
+        [1.0, 2.0, 1.0],
+        [0.0, 0.0, 0.0],
+        [-1.0, -2.0, -1.0]])
 
-    image_conv = np.zeros(image.shape)
+    kernels = [kernel_x, kernel_y]
+    grayscale_image = to_grayscale(image)
 
-    for i in range(h, image_h-h):
-        for j in range(w, image_w-w):
-            sum = 0
+    # Multiprocessing
+    pool = mp.Pool(2)
+    results = [pool.apply_async(sobel_op, (kernel, grayscale_image))
+               for kernel in kernels]
+    pool.close()
 
-            for m in range(kernel_h):
-                for n in range(kernel_w):
-                    sum = (sum + kernel[m][n]*image[i-h-m][j-w-n])
-            image_conv[i][j] = sum
-    # cv2.imshow("Convolved image", image_conv)
-    return image_conv
+    # Get the results of the multiprocessing and build the image
+    Gx = results[0].get()
+    Gy = results[1].get()
+    sobel_image = np.hypot(Gx, Gy)
+    sobel_image = sobel_image / np.max(sobel_image)
 
-
-def norm(img1, img2):
-    img_copy = np.zeros(img1.shape)  # image with initial zero values
-
-    for i in range(img1.shape[0]):
-        for j in range(img1.shape[1]):
-            q = sqrt((img1[i][j]**2 + img2[i][j]**2))
-            if q > 60:
-                img_copy[i][j] = 255
-            else:
-                img_copy[i][j] = 0
-    return img_copy
-
-
-kernel = np.array([
-    [-1, -2, -1],
-    [0, 0, 0],
-    [1, 2, 1]], dtype="float64")
-
-gy = conv(image, kernel)
-cv2.imshow("gradient_y", gy)
-
-
-kernel = np.array([
-    [1, 0, -1],
-    [2, 0, -2],
-    [1, 0, -1]], dtype="float64")
-gx = conv(image, kernel)
-cv2.imshow("gradient_x", gx)
-
-g_sobel = norm(gx, gy)
-
-cv2.imshow("Sobel_edge", g_sobel)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    plt.imsave(dst_path, sobel_image, cmap=plt.get_cmap('gray'))
