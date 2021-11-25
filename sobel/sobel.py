@@ -1,3 +1,4 @@
+from numba import jit
 from matplotlib.image import imread
 import numpy as np
 
@@ -18,6 +19,7 @@ def to_grayscale(image):
     return grayscale_image
 
 
+@jit
 def sobel_op(kernel, grayscale_image):
     [rows, columns] = np.shape(grayscale_image)
     sobel_image = np.zeros(shape=(rows, columns))
