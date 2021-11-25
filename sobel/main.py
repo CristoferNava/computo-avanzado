@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # Get the results of the multiprocessing and build the image
     Gx = results[0].get()
     Gy = results[1].get()
-    sobel_image = np.hypot(Gx, Gy)
-    sobel_image = sobel_image / np.max(sobel_image)
+    sobel_image = np.hypot(Gx, Gy)  # √((Gx^2) + (Gy^2))
+    sobel_image = sobel_image / np.max(sobel_image)  # normalize
 
     plt.imsave(dst_path, sobel_image, cmap=plt.get_cmap('gray'))
